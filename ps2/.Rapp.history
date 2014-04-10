@@ -1,0 +1,243 @@
+homes <- read.csv("homes.csv")
+homes <- read.csv("homes2004.csv")
+homes[1,]
+homes$gt20dwn <- #
+	factor(0.2<(homes$LPRICE-homes$AMMORT)/homes$LPRICE)
+par(mfrow=c(1,2)) # 1 row, 2 columns of plots #
+hist(homes$VALUE, col="grey", xlab="home value", main="")
+plot(VALUE ~ factor(BATHS), #
+    col=rainbow(8), data=homes[homes$BATHS<8,],#
+    xlab="number of bathrooms", ylab="home value")
+par(mfrow=c(1,2))
+plot(VALUE ~ STATE, data=homes, #
+	col=rainbow(nlevels(homes$STATE)), #
+	ylim=c(0,10^6), cex.axis=.65)
+plot(gt20dwn ~ FRSTHO, data=homes, #
+	col=c(1,3), xlab="Buyer's First Home?", #
+	ylab="Greater than 20% down")
+summary(homes)
+plot(value ~ EAPTBL, data=homes)
+plot(VALUE ~ EAPTBL, data=homes)
+plot(VALUE ~ LPRICE, data=homes)
+plot(LPRICE ~ EATBL, data=homes)
+plot(VALUE ~ EATBL, data=homes)
+plot(VALUE ~ EAPTB, data=homes)
+plot(VALUE ~ EAPTBL, data=homes)
+plot(LPRICE ~ EAPTBL, data=homes)
+plot(LPRICE ~ EAPTBL, data=homes)#
+plot(VALUE ~ EAPTBL, data=homes)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ EAPTBL, data=homes)#
+plot(LPRICE ~ EAPTBL, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ECOM1, data=homes)#
+plot(LPRICE ~ ECOM1, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ EGREEN, data=homes)#
+plot(LPRICE ~ EGREEN, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ EJUNK, data=homes)#
+plot(LPRICE ~ EJUNK, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ECOM2, data=homes)#
+plot(LPRICE ~ ECOM2, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ELOW1, data=homes)#
+plot(LPRICE ~ ELOW1, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ESFD, data=homes)#
+plot(LPRICE ~ ESFD, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ETRANS, data=homes)#
+plot(LPRICE ~ ETRANS, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ EABAN, data=homes)#
+plot(LPRICE ~ EABAN, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ HOWH, data=homes)#
+plot(LPRICE ~ HOWH, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ ODORA, data=homes)#
+plot(LPRICE ~ ODORA, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ STRNA, data=homes)#
+plot(LPRICE ~ STRNA, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ INTW, data=homes)#
+plot(LPRICE ~ INTW, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(INTW ~ STATE, data=homes)#
+plot(INTW ~ STATE, data=homes)#
+par(old.par)
+plot(INTW ~ STATE, data=homes)
+old.par <- par(mfrow=c(1, 2))#
+plot(INTW ~ DWNPAY, data=homes)#
+plot(INTW ~ DWNPAY, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(INTW ~ MATBUY, data=homes)#
+plot(INTW ~ MATBUY, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(INTW ~ AMMORT, data=homes)#
+plot(INTW ~ AMMORT, data=homes)#
+par(old.par)
+old.par <- par(mfrow=c(1, 2))#
+plot(AMMORT ~ INTW, data=homes)#
+plot(AMMORT ~ INTW, data=homes)#
+par(old.par)
+plot(AMMORT ~ INTW, data=homes)
+plot(EABAN ~ INTW, data=homes)
+plot(INTW ~ EABAN, data=homes)
+classreg <- glm(log(value) ~ .-AMMORT -LPRICE, data=homes)
+classreg <- glm(log(VALUE) ~ .-AMMORT -LPRICE, data=homes)
+pvals <- summary(pricey)$coef[-1,4]
+pvals <- summary(classreg)$coef[-1,4]
+pvals
+summary(classreg)
+names(pvals)[pvals>.1]
+source("fdr.R")#
+cutoff <- fdr_cut(pvals, 0.1)
+cutoff <- fdr_cut(pvals, 0.1, axis(side=1, at=c(0:35)))
+source("fdr.R")#
+cutoff <- fdr_cut(pvals, 0.1, axes = FALSE)#
+axis (side=1, at=c(0:35)))
+cutoff <- fdr_cut(pvals, 0.1)
+summary(homes$gt20dwn)
+classreg3 <- glm(gt20dwn) ~ ., data=homes, family=binomial)
+classreg3 <- glm(gt20dwn ~ ., data=homes, family=binomial)
+classreg3 <- glm(gt20dwn ~ , data=homes, family=binomial)
+classreg3 <- glm(gt20dwn ~ .-AMMORT - LPRICE, data=homes, family=binomial)
+classreg3 <- glm(gt20dwn ~ .-AMMORT , data=homes, family=binomial)
+summary(classreg)
+classreg[1,0]
+classreg[1,]
+classreg2[1,]
+summary(gt20dwnTRUE)
+summary(baths)
+summary(homes4baths)
+summary(homes$baths)
+summary(homes$gt20dwntrue)
+summary(homes$VALUE)
+summary(homes$BATHS)
+summary(homes$gt20dwnTRUE)
+summary(homes$gt20dwnTRUE)
+homes[1,]
+classreg3 <- glm(gt20dwn ~ .-AMMORT ~gt20dwn, data=homes, family=binomial)
+classreg3 <- glm(gt20dwn ~ .-AMMORT -gt20dwn, data=homes, family=binomial)
+summary(classreg3)
+summary(homes$gt20dwn)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO.-AMMORT, data=oj)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO.-AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHOY.-AMMORT, data=homes, family=binomial)
+homes[1,]
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO.-AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO .-AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO ~ .-AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO -AMMORT, data=homes, family=binomial)
+summary(classreg4)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO -AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ BATHS*FRSTHO . -AMMORT, data=homes, family=binomial)
+classreg4 = glm(gt20dwn ~ . +BATHS*FRSTHO -AMMORT, data=homes, family=binomial)
+summary(classreg4)
+old.par <- par(mfrow=c(1, 2))#
+plot(VALUE ~ INTW, data=homes)#
+plot(LPRICE ~ INTW, data=homes)#
+par(old.par)
+plot(AMMORT ~ INTW, data=homes)
+boxplot(AMMORT ~ INTW, data=homes)
+plot(INTW ~ STATE, data=homes)
+plot(INTW ~ EABAN, data=homes)
+plot(VALUE ~ INTW, data=homes)
+boxplot(VALUE ~ INTW, data=homes)
+boxplot(INTW ~ DWNPAY, data=homes)
+boxplot(INTW ~ DWNPAY, data=homes)
+classreg <- glm(log(VALUE) ~ .-AMMORT -LPRICE, data=homes)#
+pvals <- summary(classreg)$coef[-1,4]#
+source("fdr.R")#
+cutoff <- fdr_cut(pvals, 0.1)
+summary(classreg)
+names(pvals)[pvals>.5]
+names(pvals)[pvals>.05]
+names(pvals)[pvals<.05]
+x <- names(pvals)[pvals<.05]
+summary(x)
+glm(log(VALUE) ~ x, data=homes)
+x <- names(pvals)[pvals>.05]
+glm(log(VALUE) ~ .-x -LPRICE, data=homes)
+glm(log(VALUE) ~ .-x -AMMORT -LPRICE, data=homes)
+summary(x)
+x[1,]
+homes$x[1,]
+homes$x[2,]
+homes$x[,2]
+glm(log(VALUE) ~ .-x -AMMORT -LPRICE, data=homes)
+glm(log(VALUE) ~ .-AMMORT -LPRICE -EAPTBLY- ECOM1Y -ECOM2Y -EGREENY -ELOW1Y -ETRANSY -ODORAY -PER -ZADULT -NUNITS , data=homes)
+glm(log(VALUE) ~ .-AMMORT -LPRICE -EAPTBLY -ECOM1Y -ECOM2Y -EGREENY -ELOW1Y -ETRANSY -ODORAY -PER -ZADULT -NUNITS , data=homes)
+glm(log(VALUE) ~ .-AMMORT -LPRICE -EAPTBLY -ECOM1Y -ECOM2Y -EGREENY -ELOW1Y -ETRANSY -ODORAY -PER -ZADULT -NUNITS, data=homes)
+glm(log(VALUE) ~ .-AMMORT -LPRICE -EAPTBL -ECOM1 -ECOM2 -EGREEN -ELOW1 -ETRANS -ODORA -PER -ZADULT -NUNITS, data=homes)
+classreg2b <- glm(log(VALUE) ~ .-AMMORT -LPRICE -EAPTBL -ECOM1 -ECOM2 -EGREEN -ELOW1 -ETRANS -ODORA -PER -ZADULT -NUNITS, data=homes)
+summary(classreg2b)
+summary(classreg2b)$r.squared
+summary(classreg)
+1 - 10359/14290
+summary(classreg2b)
+1 - 10373/14920
+1 - 10359/14920
+classreg4 = glm(gt20dwn ~ . +BATHS*FRSTHO -AMMORT, data=homes, family=binomial)
+summary(classreg4)
+classreg3 <- glm(gt20dwn ~ ., data=homes, family=binomial)
+summary(classreg3)
+classreg3 <- glm(gt20dwn ~ . -LPRICE, data=homes, family=binomial)
+summary(classreg3)
+classreg3 <- glm(gt20dwn ~ . -LPRICE - AMMORT, data=homes, family=binomial)
+summary(classreg3)
+classreg3 <- glm(gt20dwn ~ . - AMMORT, data=homes, family=binomial)
+summary(classreg3)
+classreg3 <- glm(gt20dwn ~ .-LPRICE - AMMORT, data=homes, family=binomial)
+summary(classreg3)
+homes$gt20dwn[1,]
+homes[1,]
+(85000 - 50000)/85000
+boxplot(LPRICE ~ gtw20down, data=homes)
+boxplot(LPRICE gtw20down, data=homes)
+boxplot(LPRICE, gtw20down, data=homes)
+boxplot(VALUE ~ INTW, data=homes)
+boxplot(LPRICE, gt20dwn, data=homes)
+boxplot(LPRICE ~ gt20dwn, data=homes)
+classreg3b = glm(gt20dwn ~ . +BATHS*FRSTHO -AMMORT -LPRICE, data=homes, family=binomial)
+summary(classreg3b)
+gt100 <- which(homes$VALUE>1e5)
+summary(gt100)
+summary(gt100)
+gt100[1,]
+gt100
+homes[,gt100]
+homes[gt100,]
+homes[gt100,1]
+homes100 <- homes[gt100,]
+homes99 <- homes[-gt100,]
+summary(homes100)
+summary(homes99)
+classreg4a = glm(gt20dwn ~ . +BATHS*FRSTHO -AMMORT -LPRICE, data=homes100, family=binomial)
+classreg4b = glm(gt20dwn ~ . +BATHS*FRSTHO -AMMORT -LPRICE, data=homes99, family=binomial)
+summary(classreg4a)
+summary(classreg4b)
+1 - 15210/13617
+1- 3494.1/3214.5
+1- 3214.5/3214.5
+1- 3214.5/3494.1
+1 - 13617/15210
