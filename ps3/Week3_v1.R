@@ -1,6 +1,6 @@
 ## nhl hockey analysis
 
-## the data is in gamlr.  
+## the data is in gamlr.  joanne
 ## You need to first install this, 
 ## via install.packages("gamlr")
 
