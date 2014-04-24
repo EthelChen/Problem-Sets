@@ -1,6 +1,6 @@
 ## nhl hockey analysis
 
-## the data is in gamlr.  joanne
+## the data is in gamlr.  
 ## You need to first install this, 
 ## via install.packages("gamlr")
 
@@ -90,7 +90,7 @@ nhlreg_stand <- gamlr(x, y,
 Baicc_stand <- coef(nhlreg_stand)[colnames(onice),]
 
 ## get the distribution of coeff for non stand
-cv.nhlreg_nonstand <- cv.gamlr(x, y, 
+cv.nhlreg <- cv.gamlr(x, y, 
 	free=1:(ncol(config)+ncol(xteam)), 
 	family="binomial", standardize=FALSE)
 
@@ -100,16 +100,19 @@ cv.nhlreg_stand <- cv.gamlr(x, y,
 	family="binomial", standardize=TRUE)
 
 par(mfrow=c(1,2))
-plot(cv.nhlreg_nonstand, ylim = c(1.15,1.2), main = "nonstand")
+plot(cv.nhlreg, ylim = c(1.15,1.2), main = "nonstand")
 plot(cv.nhlreg_stand, ylim = c(1.15,1.2), main = "stand")
-# I can't figure out how to put the graphs on the same scale, but as you can see it affects the deviance
 
 ## Problem 3
-## I'm not sure what these means
 
-coef(cv.nhlreg_stand,arg="lse") 
+coef(cv.nhlreg,arg="lse") 
 matplot(x=seq(1,100, by =1),cbind(AIC(nhlreg),AICc(nhlreg),BIC(nhlreg)))
 matplot(x=seq(1,100, by =1),cbind(AIC(nhlreg),AICc(nhlreg)))
+LL <- log(nhlreg$lambda)
+plot(cv.nhlreg, ylim = c(1.15,1.2))
+abline(v=LL[which.min(AIC(nhlreg))], col="orange", lty=3)
+abline(v=LL[which.min(AICc(nhlreg))], col="green", lty=3)
+abline(v=LL[which.min(BIC(nhlreg))], col="red", lty=3)
 
 ## Problem 4
 nhlreg_nofree <- gamlr(x, y,
@@ -127,9 +130,16 @@ cv.nhlreg_onlyps <- cv.gamlr(x2, y,
 Baicc_onlyps <- coef(nhlreg_onlyps)[colnames(onice),]
 
 par(mfrow=c(1,3))
-plot(cv.nhlreg_nonstand, ylim = c(1.15,1.4), xlim = c(-11,-2), main = "nonstand")
+plot(cv.nhlreg, ylim = c(1.15,1.4), xlim = c(-11,-2), main = "nonstand")
+abline(v=LL[which.min(AICc(nhlreg))], col="green", lty=3)
+
 plot(cv.nhlreg_nofree, ylim = c(1.15,1.4), xlim = c(-11,-2), main = "nofree")
+LL_nofree = log(nhlreg_nofree$lambda)
+abline(v=LL[which.min(AICc(nhlreg_nofree))], col="green", lty=3)
+
 plot(cv.nhlreg_onlyps, ylim = c(1.15,1.4), xlim = c(-11,-2), main = "onlyps")
+LL_onlyps = log(nhlreg_nofree$lambda)
+abline(v=LL[which.min(AICc(nhlreg_onlyps))], col="green", lty=3)
 
 par(mfrow=c(1,2))
 matplot(x=seq(1,100, by =1),cbind(AIC(nhlreg),AICc(nhlreg),BIC(nhlreg)))
