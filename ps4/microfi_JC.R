@@ -64,11 +64,41 @@ hist(degree)
 
 ## QUESTION 1
 
-dvar <- as.matrix(degree)
+## not quite sure how to transform it.  Diminishing returns?
+dvar <- degree^(1/2)
 
 ## QUESTION 2
 
-xvar <- sparse.model.matrix(~.,data=hh)[,-1]
-dpredict <- gamlr(dvar, xvar)
+xvar <- sparse.model.matrix(~. - loan,data=hh)[,-1]
+dtreat <- gamlr(xvar, dvar)
+dtreatcoef <- cv.gamlr(xvar,dvar)
+plot(dtreat)
+coef(dtreat)
+
+## QUESTION 3
+
+dhat <- predict(dtreat,xvar,type="response")
+plot(dhat) 
+loan = hh$loan
+causal <- gamlr(cBind(dvar,dhat,xvar),loan,free=2)
+coef(causal)["dvar",] ## "v" that we're looking for
+
+## QUESTION 4
+
+naive <- gamlr(cBind(dvar,xvar),loan)
+coef(naive)["dvar",]
+## not very different from 3.... did I do something wrong??
+
+## QUESTION 5
+### NOT DONE
+
+gamma <- c(); n <- nrow(dhat)
+for (b in 1:100){
+	ib <- sample(1:n, n, replace=TRUE)
+	fb <- gamlr(cBind(dvar,dhat,xvar),loan,subset=ib)
+
+
+
+
 
 
