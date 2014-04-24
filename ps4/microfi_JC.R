@@ -39,6 +39,7 @@ village33 <- induced.subgraph(hhnet, v=which(V(hhnet)$village=="33"))
 
 # vertex.size=3 is small.  default is 15
 plot(village1, vertex.size=3, edge.curved=FALSE)
+which(V(hhnet)$village=="1") # households in village
 plot(village33, vertex.size=3, edge.curved=FALSE)
 
 ######  now, on to your homework stuff
@@ -64,38 +65,51 @@ hist(degree)
 
 ## QUESTION 1
 
-## not quite sure how to transform it.  Diminishing returns?
-dvar <- degree^(1/2)
+## Percentage-based scale; normal distribution.  Adding 1 so log works, but once logged, 0s will stay 0s
+dvar <- log(degree+1)
+### TESTING ### dvarBIG <- dvar[which(dvar>2.5)]
+### TESTING ### dvarSMALL <- dvar[which(dvar<=2.5)]
+
+### TESTING ### test <- which(dvar>2.5)
+### TESTING ### hh1 <- which(dvar>2.5)*diag(1,2,)
 
 ## QUESTION 2
 
 xvar <- sparse.model.matrix(~. - loan,data=hh)[,-1]
-dtreat <- gamlr(xvar, dvar)
-dtreatcoef <- cv.gamlr(xvar,dvar)
-plot(dtreat)
+
+dtreat <- gamlr(xvar, dvar,lambda.min.ratio=0.001)
 coef(dtreat)
+dhat <- predict(dtreat,xvar,type="response")
+vector <- dvar-dhat ## THIS IS V
+hist(vector[,1]) ## average error is 0.  SD is 0.8
+plot(dvar,dhat)
 
 ## QUESTION 3
 
-dhat <- predict(dtreat,xvar,type="response")
-plot(dhat) 
 loan = hh$loan
-causal <- gamlr(cBind(dvar,dhat,xvar),loan,free=2)
-coef(causal)["dvar",] ## "v" that we're looking for
+causal <- gamlr(cBind(dvar,dhat,xvar),loan,free=2,family="binomial")
+coef(causal)["dvar",] 
 
 ## QUESTION 4
 
-naive <- gamlr(cBind(dvar,xvar),loan)
+naive <- gamlr(cBind(dvar,xvar),loan,family="binomial")
 coef(naive)["dvar",]
-## not very different from 3.... did I do something wrong??
+
+coef(causal)["dvar",] - coef(naive)["dvar",]
+
 
 ## QUESTION 5
-### NOT DONE
+## Bootstrap your estimator from [3] and describe the uncertainty. 
 
-gamma <- c(); n <- nrow(dhat)
+gamma <- c(); n <- nrow(hh)
 for (b in 1:100){
 	ib <- sample(1:n, n, replace=TRUE)
-	fb <- gamlr(cBind(dvar,dhat,xvar),loan,subset=ib)
+	fb <- gamlr(cBind(dvar,dhat,xvar)[ib,],loan[ib],family="binomial",free=2)
+	gamma <- c(gamma,coef(fb)["dvar",])}
+
+hist(gamma)
+
+##YAY DONE
 
 
 
