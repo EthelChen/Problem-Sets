@@ -73,6 +73,10 @@ dvar <- log(degree+1)
 ### TESTING ### test <- which(dvar>2.5)
 ### TESTING ### hh1 <- which(dvar>2.5)*diag(1,2,)
 
+par(mfrow=c(1,2))
+hist(degree)
+hist(dvar)
+
 ## QUESTION 2
 
 xvar <- sparse.model.matrix(~. - loan,data=hh)[,-1]
@@ -81,8 +85,15 @@ dtreat <- gamlr(xvar, dvar,lambda.min.ratio=0.001)
 coef(dtreat)
 dhat <- predict(dtreat,xvar,type="response")
 vector <- dvar-dhat ## THIS IS V
-hist(vector[,1]) ## average error is 0.  SD is 0.8
-plot(dvar,dhat)
+par(mfrow=c(1,2))
+hist(vector[,1], xlab = "Dvar - Dhat", main = "Histogram of Dvar - Dhat") ## average error is 0.  SD is 0.8
+dpred <- lm(dvar ~ dhat[,1])
+summary(dpred)
+plot(dhat,dvar,xlim=c(0,4), main = "Scatter of Dhat vs Dvar")
+abline(dpred)
+
+
+
 
 ## QUESTION 3
 
@@ -108,6 +119,8 @@ for (b in 1:100){
 	gamma <- c(gamma,coef(fb)["dvar",])}
 
 hist(gamma)
+mean(gamma)
+sd(gamma)
 
 ##YAY DONE
 
