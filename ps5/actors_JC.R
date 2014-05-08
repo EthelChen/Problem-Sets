@@ -53,11 +53,13 @@ which(V(actnet)$name=="Bacon, Kevin")
 
 BaconKevin <- graph.neighborhood(actnet, 1, V(actnet)["Bacon, Kevin"])[[1]]
 V(BaconKevin)$color <- "gold"
+V(BaconKevin)$vertex.size=10
 V(BaconKevin)["Bacon, Kevin"]$color <- "red"
 plot(BaconKevin, vertex.label=NA, vertex.frame.color=0, edge.arrow.width=.75,edge.curved=FALSE)
 
 BaconKevin2 <- graph.neighborhood(actnet, 2, V(actnet)["Bacon, Kevin"])[[1]]
-V(BaconKevin2)$color <- "gold"
+V(BaconKevin2)$color <- "green"
+V(BaconKevin2)[V(BaconKevin)$name]$color <- "gold"
 V(BaconKevin2)["Bacon, Kevin"]$color <- "red"
 plot(BaconKevin2, vertex.label=NA, vertex.frame.color=0, edge.arrow.width=.75,edge.curved=FALSE)
 
@@ -79,4 +81,3 @@ V(actnet)$name[order(degree(actnet), decreasing=TRUE)[1:10]]
 #4
 ARules <- apriori(casttrans, parameter=list(support=.001, confidence=.1))
 inspect(ARules)
-
