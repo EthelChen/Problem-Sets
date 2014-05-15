@@ -6,7 +6,6 @@ source("kIC.R")
 
 
 data(congress109)
-congress109[1:10,]
 totalcongress <- cbind(as.matrix(congress109Counts),congress109Ideology)
 
 
@@ -30,7 +29,7 @@ labels(congress109Ideology)
 #  takes time, because you're making it dense from sparse
 
 #scale
-f <- as.matrix(congress109Counts/rowSums(congress109Counts))
+f <- as.matrix(congress109Counts/colSums(congress109Counts))
 fs <- scale(f)
 
 # run kmeans with 1:25 and pick find BIC and AIC
@@ -49,8 +48,9 @@ abline(v=which.min(kbic),col=4)
 # what is lowest BIC?
 which.min(kbic) #lowest BIC is 2 ... There are only two parties?  Hard to interpret when you look at the analysis and cuts below
 
-kmfs <- kmeans(fs,2) # run a clustering and look at it
+kmfs <- kmeans(fs,which.min(kbic)) # run a clustering and look at it
 print(apply(kmfs$centers,1,function(c) colnames(fs)[order(-c)[1:10]]))
+
 
 tapply(congress109Ideology$party,kmfs$cluster,table)
 tapply(congress109Ideology$chamber,kmfs$cluster,table)
@@ -69,12 +69,22 @@ tpcs <- topics(c,K=5*(1:10),tol=10) # selected 10 so do a another search around 
 tpcs2 <- topics(c,K=(4:17),tol=10) # chooses 11
 
 summary(tpcs2, n=10) 
-
-tapply(congress109Ideology_s$rsb<=0,kmfs$cluster,table)
-
 # there are several topics that float to the top including credit cards
 # gun control, bringing the troops home, etc.  These represent topics 
 # up for debate in the public sphere this year.
+
+rownames(tpcs2$theta)[order(tpcs2$theta[,1], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,2], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,3], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,4], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,5], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,6], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,7], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,8], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,9], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,10], decreasing=TRUE)[1:10]]
+rownames(tpcs2$theta)[order(tpcs2$theta[,11], decreasing=TRUE)[1:10]]
+
 
 # [3]
 
@@ -84,7 +94,7 @@ tapply(congress109Ideology$party,kmfs$cluster,table)
 #regress topics onto party and reshape
 party <- congress109Ideology$party
 repshare <- congress109Ideology$repshare
-x <- 100*congress109Counts/rowSums(congress109Counts)
+x <- 100*congress109Counts/colSums(congress109Counts)
 
 # multinomial regression
 cl <- makeCluster(2,type=ifelse(.Platform$OS.type=="unix","FORK","PSOCK")) 
@@ -106,4 +116,3 @@ plot(cv.repshare_regP)
 
 coef(cv.repshare_reg, select = "1se")
 coef(cv.repshare_regP, select = "1se")
-
